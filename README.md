@@ -59,10 +59,12 @@ The installation takes less than an hour. Successfull installation will also cre
 AlphaLink (see below).
 
 ```bash
+# get forked repo
+git clone https://github.com/gieses/AlphaLink2
 # optional
 conda install -c conda-forge mamba -y
 # alphalink env
-mamba env create --file environment.yml --prefix $ENV_PATH
+mamba env create --file environment.yml --prefix ENV_PATH
 ```
 
 ### Install AlphaFold - necessary for relax
