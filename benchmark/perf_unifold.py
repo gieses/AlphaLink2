@@ -10,8 +10,8 @@ import pathlib
 
 from tqdm import tqdm
 
-from unifold.modules.evoformer import EvoformerIteration
-from unifold.modules.attentions import gen_msa_attn_mask, gen_tri_attn_mask
+from alphalink.unifold.modules.evoformer import EvoformerIteration
+from alphalink.unifold.modules.attentions import gen_msa_attn_mask, gen_tri_attn_mask
 
 
 class WrapEvoformerLayer(nn.Module):

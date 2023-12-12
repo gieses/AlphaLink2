@@ -26,6 +26,14 @@ setup(
     packages=find_packages(
         exclude=["scripts", "tests", "example_data", "docker", "benchmark", "img", "evaluation", "notebooks"]
     ),
+    entry_points={
+        "console_scripts": [
+            "alphalink2-crosslinks=alphalink.scripts.alphalink_generate_crosslinks:main",
+            "alphalink2-msa=alphalink.scripts.alphalink_msa:main",
+            "alphalink2-inference=alphalink.scripts.alphalink_inference:main",
+            "alphalink2-wf=alphalink.scripts.alphalink_wf:main",
+        ]},
+
     install_requires=[
         "absl-py",
         "biopython",

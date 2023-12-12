@@ -5,7 +5,7 @@ import glob
 import json
 from tqdm import tqdm
 from multiprocessing import Pool
-from unifold.msa.mmcif import parse
+from alphalink.unifold.msa.mmcif import parse
 import gzip
 
 

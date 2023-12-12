@@ -1,8 +1,8 @@
 import torch
 import sys
 
-from unifold.config import model_config
-from unifold.modules.alphafold import AlphaFold
+from alphalink.unifold.config import model_config
+from alphalink.unifold.modules import AlphaFold
 
 from scripts.translate_jax_params import (
     import_jax_weights_,

@@ -1,0 +1,35 @@
+name: alphalink2
+
+channels:
+  - bioconda
+  - conda-forge
+  - pytorch
+  - nvidia
+  - nodefaults
+
+dependencies:
+  - python==3.10
+  - ipython
+  - pytorch==2.0
+  - pytorch-cuda==11.8
+  - cuda-toolkit==11.8.0
+  - openmm==7.7.0
+  - pdbfixer
+  - hmmer
+  - hhsuite==3.3.0
+  - kalign2
+  - pytest
+  - pip
+  - pip:
+      - urllib3==1.26.16
+      - tensorflow-cpu==2.13.0rc2
+      - git+https://github.com/deepmind/alphafold.git
+      - nvidia-pyindex
+      - https://github.com/dptech-corp/Uni-Core/releases/download/0.0.3/unicore-0.0.1+cu118torch2.0.0-cp310-cp310-linux_x86_64.whl
+      - https://storage.googleapis.com/jax-releases/cuda11/jaxlib-0.4.21+cuda11.cudnn86-cp310-cp310-manylinux2014_x86_64.whl
+      - python-dotenv
+      - .
+variables:
+  # add locations to params and openfold db here
+  AFLINK2_PARAMS:
+  AFLINK2_DATABASE_DIR:

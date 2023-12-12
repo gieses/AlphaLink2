@@ -53,43 +53,21 @@ The chain IDs A..Z+ designate all unique chains (based on sequence identity) in 
 
 ## Installation and preparations
 
-### Installing AlphaLink from scratch with conda/ pip
-In part based on: https://github.com/kalininalab/alphafold_non_docker
+To install AlphaLink, clone the repository and run the command below (linux). It is highly recommended to install mamba
+before creating the environment. For other systems, build [Uni-Core from scratch.](https://github.com/dptech-corp/Uni-Core#installation).
+The installation takes less than an hour. Successfull installation will also create the command line tools to run
+AlphaLink (see below).
 
-Installation will take around 1-2 hours. Tested on Linux (CentOS 7/8).
-
-### Create new conda environment
-```	
-conda create --name alphalink -c conda-forge python=3.10
-conda activate alphalink
-```
-
-### Install Uni-Core
-
-For Linux:
-```
-pip install nvidia-pyindex
-pip install https://github.com/dptech-corp/Uni-Core/releases/download/0.0.3/unicore-0.0.1+cu118torch2.0.0-cp310-cp310-linux_x86_64.whl
-```
-
-For other systems, build [Uni-Core from scratch.](https://github.com/dptech-corp/Uni-Core#installation)
-
-
-### Install utilities
-```
-conda install -y -c conda-forge openmm==7.7.0 pdbfixer
-conda install -y -c bioconda hmmer hhsuite==3.3.0 kalign2
+```bash
+# optional
+conda install -c conda-forge mamba -y
+# alphalink env
+mamba env create --file environment.yml --prefix $ENV_PATH
 ```
 
 ### Install AlphaFold - necessary for relax
 
-```
-pip install urllib3==1.26.16 tensorflow-cpu==2.13.0rc2
-git clone https://github.com/deepmind/alphafold.git
-
-cd alphafold
-python setup.py install
-
+```bash
 # download folding resources
 wget --no-check-certificate https://git.scicore.unibas.ch/schwede/openstructure/-/raw/7102c63615b64735c4941278d92b554ec94415f8/modules/mol/alg/src/stereo_chemical_props.txt
 
@@ -114,30 +92,53 @@ bash scripts/download/download_all_data.sh /path/to/database/directory reduced_d
 
 They require up to 3TB of storage.
 
-### Install AlphaLink2
-```
-git clone https://github.com/Rappsilber-Laboratory/AlphaLink2.git
-cd AlphaLink2
-python setup.py install
-```
-
 ## Model weights
 	
 The model weights are deposited here: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8007238.svg)](https://doi.org/10.5281/zenodo.8007238)
 
 ## Running AlphaLink
 
-After set up, AlphaLink can be run as follows:
+After set up, AlphaLink can be run with individual scripts or as a workflow. To simplify the command arguments,
+specify the two environment variables in your shell (or keep providing them on the command line):
 
 ```bash
-    bash run_alphalink.sh \
-    /path/to/the/input.fasta \        # target fasta file
-    /path/to/crosslinks.pkl.gz \      # pickled and gzipped dictionary with crosslinks
-    /path/to/the/output/directory/ \  # output directory
-    /path/to/model_parameters.pt \    # model parameters
-    /path/to/database/directory/ \    # directory of databases
-    2020-05-01                        # use templates before this date
+export AFLINK2_PARAMS="/path/to/weights/alphalink2_params/AlphaLink-Multimer_SDA_v3.pt"
+export AFLINK2_DATABASE_DIR="/path/to/openfold/data"
 ```
+
+```bash
+# single commands
+alphalink2-crosslinks --csv data/H1142.csv --output data/H1142.pkl
+alphalink2-msa \
+--fasta_path data/H1142.fasta \
+--output_dir data/alphalink_msas/ \
+--max_template_date 2022-05-01 \
+--n_cpu 255
+alphalink2-inference \
+--model_device cuda:0 \
+--data_dir data/alphalink_msas/H1142 \
+--crosslinks data/H1142.pkl \
+--bf16 \
+--use_uniprot \
+--save_raw_output \
+--relax \
+--output_dir data/alphalink_predictions/
+
+# workflow command
+alphalink2-wf --csv data/H1142.csv --output data/H1142.pkl \
+--fasta_path data/H1142.fasta \
+--output_dir results_wf/alphalink_msas/ \
+--max_template_date 2022-05-01 \
+--n_cpu 255 \
+--model_device cuda:0 \
+--data_dir results_wf/alphalink_msas/ \
+--bf16 \
+--use_uniprot \
+--save_raw_output --relax \
+--output_dir results_wf/alphalink_predictions/ \
+--target_name H1142
+````
+
 Output folder will contain the relaxed and unrelaxed PDBs and a pickle file with the PAE map.
 
 ### Hardware requirements
